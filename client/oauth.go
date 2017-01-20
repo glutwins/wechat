@@ -4,6 +4,8 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/url"
+
+	"github.com/glutwins/webclient"
 )
 
 //GetRedirectURL 获取跳转的url地址
@@ -15,7 +17,7 @@ func (c *Client) GetRedirectURL(redirectURI, scope, state string) string {
 
 // GetUserAccessToken 通过网页授权的code 换取access_token(区别于context中的access_token)
 func (c *Client) GetUserAccessToken(code string) (*UserAccessToken, error) {
-	if b, err := c.httpGet(fmt.Sprintf(userAccessTokenURL, c.AppID, c.AppSecret, code)); err != nil {
+	if b, err := webclient.DoGet(fmt.Sprintf(userAccessTokenURL, c.AppID, c.AppSecret, code)); err != nil {
 		return nil, err
 	} else {
 		token := &UserAccessToken{}
@@ -28,7 +30,7 @@ func (c *Client) GetUserAccessToken(code string) (*UserAccessToken, error) {
 
 //RefreshAccessToken 刷新access_token
 func (c *Client) RefreshAccessToken(refreshToken string) (*UserAccessToken, error) {
-	if b, err := c.httpGet(fmt.Sprintf(refreshAccessTokenURL, c.AppID, refreshToken)); err != nil {
+	if b, err := webclient.DoGet(fmt.Sprintf(refreshAccessTokenURL, c.AppID, refreshToken)); err != nil {
 		return nil, err
 	} else {
 		token := &UserAccessToken{}
@@ -53,7 +55,7 @@ func (c *Client) GetUserInfo(accessToken, openID string) (*UserInfo, error) {
 	user := &UserInfo{}
 	uri := fmt.Sprintf(userInfoURL, accessToken, openID)
 
-	if b, err := c.httpGet(uri); err != nil {
+	if b, err := webclient.DoGet(uri); err != nil {
 		return nil, err
 	} else if err = json.Unmarshal(b, &user); err != nil {
 		return nil, err

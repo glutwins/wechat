@@ -10,6 +10,7 @@ import (
 	"net/http"
 	"time"
 
+	"github.com/glutwins/webclient"
 	"github.com/glutwins/wechat/cache"
 	"github.com/glutwins/wechat/crypt"
 )
@@ -138,27 +139,13 @@ func (c *Client) jsonPost(uri string, obj interface{}) ([]byte, error) {
 	return ioutil.ReadAll(response.Body)
 }
 
-func (c *Client) httpGet(uri string) ([]byte, error) {
-	resp, err := http.Get(uri)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-	if resp.StatusCode != http.StatusOK {
-		return nil, fmt.Errorf("httpGet: uri=%v , statusCode=%v", uri, resp.StatusCode)
-	}
-
-	return ioutil.ReadAll(resp.Body)
-}
-
 func (c *Client) getJsonUrlFormat(res interface{}, url string, args ...interface{}) error {
 	uri, err := c.formatUrlWithAccessToken(url, args...)
 	if err != nil {
 		return err
 	}
 
-	if b, err := c.httpGet(uri); err != nil {
+	if b, err := webclient.DoGet(uri); err != nil {
 		return err
 	} else {
 		return json.Unmarshal(b, res)

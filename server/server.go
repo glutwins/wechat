@@ -9,15 +9,16 @@ import (
 	"github.com/glutwins/wechat/message"
 )
 
+// Handler 微信消息处理函数
 type Handler func(*message.MixMessage) message.Reply
 
-//Server struct
+// Server 微信消息http server handler
 type Server struct {
 	*crypt.WechatConfig
 	messageHandler Handler
 }
 
-//NewServer init
+// NewServer init
 func NewServer(cfg *crypt.WechatConfig, h Handler) *Server {
 	srv := new(Server)
 	srv.WechatConfig = cfg
@@ -25,7 +26,7 @@ func NewServer(cfg *crypt.WechatConfig, h Handler) *Server {
 	return srv
 }
 
-//Serve 处理微信的请求消息
+//ServeHTTP 处理微信的请求消息
 func (srv *Server) ServeHTTP(w http.ResponseWriter, req *http.Request) {
 	ctx := context.NewContext(req, w, srv.WechatConfig)
 	echostr, exists := ctx.Query("echostr")

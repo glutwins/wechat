@@ -3,7 +3,7 @@ package client
 import (
 	"encoding/json"
 
-	"github.com/glutwins/wechat/util"
+	"github.com/glutwins/webclient"
 )
 
 //Article 永久图文素材
@@ -27,19 +27,24 @@ func (c *Client) AddNews(articles []*Article) (string, error) {
 	return res.MediaID, res.Error()
 }
 
-// AddMaterial 上传永久性素材（处理视频需要单独上传）
-func (c *Client) AddMaterial(mediaType MediaType, filename string) (string, string, error) {
-	url, err := c.formatUrlWithAccessToken(addMaterialURL, mediaType)
+func (c *Client) upload(filename string, resp interface{}, urlfmt string, args ...interface{}) error {
+	url, err := c.formatUrlWithAccessToken(urlfmt, args)
 	if err != nil {
-		return "", "", err
+		return err
 	}
 
-	response, err := util.PostFile("media", filename, url)
+	b, err := webclient.PostMultipartForm(nil, map[string]string{"media": filename}, url)
 	if err != nil {
-		return "", "", err
+		return err
 	}
+
+	return json.Unmarshal(b, resp)
+}
+
+// AddMaterial 上传永久性素材（处理视频需要单独上传）
+func (c *Client) AddMaterial(mediaType MediaType, filename string) (string, string, error) {
 	var resMaterial Material
-	if err = json.Unmarshal(response, &resMaterial); err != nil {
+	if err := c.upload(filename, &resMaterial, addMaterialURL, mediaType); err != nil {
 		return "", "", err
 	}
 	return resMaterial.MediaID, resMaterial.URL, resMaterial.Error()
@@ -55,20 +60,10 @@ func (c *Client) AddVideo(filename, title, introduction string) (string, string,
 
 	fieldValue, _ := json.Marshal(req)
 
-	fields := []util.MultipartFormField{
-		{
-			IsFile:    true,
-			Fieldname: "video",
-			Filename:  filename,
-		},
-		{
-			IsFile:    false,
-			Fieldname: "description",
-			Value:     fieldValue,
-		},
-	}
-
-	response, err := util.PostMultipartForm(fields, uri)
+	response, err := webclient.PostMultipartForm(
+		map[string]string{"description": string(fieldValue)},
+		map[string]string{"video": filename},
+		uri)
 	if err != nil {
 		return "", "", err
 	}
@@ -90,16 +85,11 @@ func (c *Client) DeleteMaterial(mediaID string) error {
 }
 
 //MediaUpload 临时素材上传
-func (c *Client) MediaUpload(mediaType MediaType, filename string) (Material, error) {
-	var media Material
-	if uri, err := c.formatUrlWithAccessToken(mediaUploadURL, mediaType); err != nil {
-		return media, err
-	} else if response, err := util.PostFile("media", filename, uri); err != nil {
-		return media, err
-	} else if err = json.Unmarshal(response, &media); err != nil {
-		return media, err
+func (c *Client) MediaUpload(mediaType MediaType, filename string) (*Material, error) {
+	media := &Material{}
+	if err := c.upload(filename, media, mediaUploadURL, mediaType); err != nil {
+		return nil, err
 	}
-
 	return media, media.Error()
 }
 
@@ -112,13 +102,9 @@ func (c *Client) GetMediaURL(mediaID string) (string, error) {
 //ImageUpload 图片上传
 func (c *Client) ImageUpload(filename string) (string, error) {
 	var image Material
-
-	if uri, err := c.formatUrlWithAccessToken(mediaUploadImageURL); err != nil {
-		return "", err
-	} else if response, err := util.PostFile("media", filename, uri); err != nil {
-		return "", err
-	} else if err = json.Unmarshal(response, &image); err != nil {
+	if err := c.upload(filename, &image, mediaUploadImageURL); err != nil {
 		return "", err
 	}
+
 	return image.URL, image.Error()
 }
