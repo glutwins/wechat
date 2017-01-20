@@ -4,9 +4,9 @@ import (
 	"net/http"
 	"time"
 
-	"wechat/context"
-	"wechat/crypt"
-	"wechat/message"
+	"github.com/glutwins/wechat/context"
+	"github.com/glutwins/wechat/crypt"
+	"github.com/glutwins/wechat/message"
 )
 
 type Handler func(*message.MixMessage) message.Reply

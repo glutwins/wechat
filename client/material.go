@@ -2,7 +2,8 @@ package client
 
 import (
 	"encoding/json"
-	"wechat/util"
+
+	"github.com/glutwins/wechat/util"
 )
 
 //Article 永久图文素材
@@ -26,21 +27,22 @@ func (c *Client) AddNews(articles []*Article) (string, error) {
 	return res.MediaID, res.Error()
 }
 
-//AddMaterial 上传永久性素材（处理视频需要单独上传）
-func (material *Client) AddMaterial(mediaType MediaType, filename string) (string, string, error) {
-	if url, err := material.formatUrlWithAccessToken(addMaterialURL, mediaType); err != nil {
+// AddMaterial 上传永久性素材（处理视频需要单独上传）
+func (c *Client) AddMaterial(mediaType MediaType, filename string) (string, string, error) {
+	url, err := c.formatUrlWithAccessToken(addMaterialURL, mediaType)
+	if err != nil {
 		return "", "", err
-	} else {
-		response, err := util.PostFile("media", filename, url)
-		if err != nil {
-			return "", "", err
-		}
-		var resMaterial Material
-		if err = json.Unmarshal(response, &resMaterial); err != nil {
-			return "", "", err
-		}
-		return resMaterial.MediaID, resMaterial.URL, resMaterial.Error()
 	}
+
+	response, err := util.PostFile("media", filename, url)
+	if err != nil {
+		return "", "", err
+	}
+	var resMaterial Material
+	if err = json.Unmarshal(response, &resMaterial); err != nil {
+		return "", "", err
+	}
+	return resMaterial.MediaID, resMaterial.URL, resMaterial.Error()
 }
 
 //AddVideo 永久视频素材文件上传
@@ -117,7 +119,6 @@ func (c *Client) ImageUpload(filename string) (string, error) {
 		return "", err
 	} else if err = json.Unmarshal(response, &image); err != nil {
 		return "", err
-	} else {
-		return image.URL, image.Error()
 	}
+	return image.URL, image.Error()
 }

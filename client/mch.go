@@ -4,7 +4,8 @@ import (
 	"bytes"
 	"encoding/xml"
 	"io/ioutil"
-	"wechat/crypt"
+
+	"github.com/glutwins/wechat/crypt"
 )
 
 type mchBaseRes struct {

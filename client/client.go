@@ -9,8 +9,9 @@ import (
 	"io/ioutil"
 	"net/http"
 	"time"
-	"wechat/cache"
-	"wechat/crypt"
+
+	"github.com/glutwins/wechat/cache"
+	"github.com/glutwins/wechat/crypt"
 )
 
 type WachatReq map[string]interface{}

@@ -9,11 +9,12 @@ import (
 	"strconv"
 	"time"
 
-	"wechat/crypt"
-	"wechat/message"
+	"github.com/glutwins/wechat/crypt"
+	"github.com/glutwins/wechat/message"
 )
 
 var (
+	// ErrSign wechat sign error
 	ErrSign = errors.New("invalid sign")
 )
 
