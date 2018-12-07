@@ -17,15 +17,15 @@ func (c *Client) GetRedirectURL(redirectURI, scope, state string) string {
 
 // GetUserAccessToken 通过网页授权的code 换取access_token(区别于context中的access_token)
 func (c *Client) GetUserAccessToken(code string) (*UserAccessToken, error) {
-	if b, err := webclient.DoGet(fmt.Sprintf(userAccessTokenURL, c.AppID, c.AppSecret, code)); err != nil {
+	b, err := webclient.DoGet(fmt.Sprintf(userAccessTokenURL, c.AppID, c.AppSecret, code))
+	if err != nil {
 		return nil, err
-	} else {
-		token := &UserAccessToken{}
-		if err = json.Unmarshal(b, token); err != nil {
-			return nil, err
-		}
-		return token, token.Error()
 	}
+	token := &UserAccessToken{}
+	if err = json.Unmarshal(b, token); err != nil {
+		return nil, err
+	}
+	return token, token.Error()
 }
 
 //RefreshAccessToken 刷新access_token
@@ -48,6 +48,19 @@ func (c *Client) CheckAccessToken(accessToken, openID string) error {
 		return err
 	}
 	return result.Error()
+}
+
+// Code2Session 登录凭证校验
+func (c *Client) Code2Session(code string) (*UserSession, error) {
+	b, err := webclient.DoGet(fmt.Sprintf(code2SessionURL, c.AppID, c.AppSecret, code))
+	if err != nil {
+		return nil, err
+	}
+	session := &UserSession{}
+	if err = json.Unmarshal(b, session); err != nil {
+		return nil, err
+	}
+	return session, session.Error()
 }
 
 //GetUserInfo 如果scope为 snsapi_userinfo 则可以通过此方法获取到用户基本信息

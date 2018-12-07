@@ -70,7 +70,7 @@ type QrCode struct {
 	Url            string `json:"url"`
 }
 
-// ResAccessToken 获取用户授权access_token的返回结果
+// UserAccessToken 获取用户授权access_token的返回结果
 type UserAccessToken struct {
 	ExpireMessage
 
@@ -78,4 +78,12 @@ type UserAccessToken struct {
 	RefreshToken string `json:"refresh_token"`
 	OpenID       string `json:"openid"`
 	Scope        string `json:"scope"`
+}
+
+// UserSession 登录凭证校验结果
+type UserSession struct {
+	CommonResp
+	OpenID     string `json:"openid"`
+	SessionKey string `json:"session_key"`
+	UnionID    string `json:"unionid"`
 }

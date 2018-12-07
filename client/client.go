@@ -6,8 +6,10 @@ import (
 	"crypto/x509"
 	"encoding/json"
 	"fmt"
+	"io"
 	"io/ioutil"
 	"net/http"
+	"net/url"
 	"time"
 
 	"github.com/glutwins/webclient"
@@ -125,9 +127,23 @@ func (c *Client) jsonPost(uri string, obj interface{}) ([]byte, error) {
 			return nil, err
 		}
 	}
+	return c.doPost(uri, "application/json;charset=utf-8", bytes.NewBuffer(jsonData))
+}
 
-	body := bytes.NewBuffer(jsonData)
-	response, err := http.Post(uri, "application/json;charset=utf-8", body)
+func (c *Client) formPost(uri string, data map[string]string) ([]byte, error) {
+	body := bytes.NewBuffer(nil)
+	for k, v := range data {
+		body.WriteString(k)
+		body.WriteString("=")
+		body.WriteString(url.QueryEscape(v))
+		body.WriteString("&")
+	}
+	body.Truncate(body.Len() - 1)
+	return c.doPost(uri, "application/x-www-form-urlencoded;charset=utf-8", body)
+}
+
+func (c *Client) doPost(uri, contentType string, r io.Reader) ([]byte, error) {
+	response, err := http.Post(uri, contentType, r)
 	if err != nil {
 		return nil, err
 	}
