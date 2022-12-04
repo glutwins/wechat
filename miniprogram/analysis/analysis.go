@@ -82,11 +82,7 @@ func (analysis *Analysis) getAnalysisRetain(urlStr string, beginDate, endDate st
 	if err != nil {
 		return
 	}
-	if result.ErrCode != 0 {
-		err = fmt.Errorf("getAnalysisRetain error : errcode=%v , errmsg=%v", result.ErrCode, result.ErrMsg)
-		return
-	}
-	return
+	return result, &result
 }
 
 // GetAnalysisDailyRetain 获取用户访问小程序日留存
@@ -130,11 +126,7 @@ func (analysis *Analysis) GetAnalysisDailySummary(beginDate, endDate string) (re
 	if err != nil {
 		return
 	}
-	if result.ErrCode != 0 {
-		err = fmt.Errorf("GetAnalysisDailySummary error : errcode=%v , errmsg=%v", result.ErrCode, result.ErrMsg)
-		return
-	}
-	return
+	return result, &result
 }
 
 // ResAnalysisVisitTrend 小程序访问数据趋势(日、月、周)
@@ -166,11 +158,7 @@ func (analysis *Analysis) getAnalysisVisitTrend(urlStr string, beginDate, endDat
 	if err != nil {
 		return
 	}
-	if result.ErrCode != 0 {
-		err = fmt.Errorf("getAnalysisVisitTrend error : errcode=%v , errmsg=%v", result.ErrCode, result.ErrMsg)
-		return
-	}
-	return
+	return result, &result
 }
 
 // GetAnalysisDailyVisitTrend 获取用户访问小程序数据日趋势
@@ -228,11 +216,7 @@ func (analysis *Analysis) GetAnalysisUserPortrait(beginDate, endDate string) (re
 	if err != nil {
 		return
 	}
-	if result.ErrCode != 0 {
-		err = fmt.Errorf("GetAnalysisUserPortrait error : errcode=%v , errmsg=%v", result.ErrCode, result.ErrMsg)
-		return
-	}
-	return
+	return result, &result
 }
 
 // VisitDistributionIndexItem 访问分数数据结构
@@ -269,11 +253,7 @@ func (analysis *Analysis) GetAnalysisVisitDistribution(beginDate, endDate string
 	if err != nil {
 		return
 	}
-	if result.ErrCode != 0 {
-		err = fmt.Errorf("GetAnalysisVisitDistribution error : errcode=%v , errmsg=%v", result.ErrCode, result.ErrMsg)
-		return
-	}
-	return
+	return result, &result
 }
 
 // VisitPageItem 访问单个页面的数据结构
@@ -309,9 +289,5 @@ func (analysis *Analysis) GetAnalysisVisitPage(beginDate, endDate string) (resul
 	if err != nil {
 		return
 	}
-	if result.ErrCode != 0 {
-		err = fmt.Errorf("GetAnalysisVisitPage error : errcode=%v , errmsg=%v", result.ErrCode, result.ErrMsg)
-		return
-	}
-	return
+	return result, &result
 }

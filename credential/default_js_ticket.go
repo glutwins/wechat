@@ -79,9 +79,5 @@ func GetTicketFromServer(accessToken string) (ticket ResTicket, err error) {
 	if err != nil {
 		return
 	}
-	if ticket.ErrCode != 0 {
-		err = fmt.Errorf("getTicket Error : errcode=%d , errmsg=%s", ticket.ErrCode, ticket.ErrMsg)
-		return
-	}
-	return
+	return ticket, &ticket
 }

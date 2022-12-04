@@ -165,9 +165,5 @@ func GetTokenFromServerContext(ctx context.Context, url string) (resAccessToken 
 	if err != nil {
 		return
 	}
-	if resAccessToken.ErrCode != 0 {
-		err = fmt.Errorf("get access_token error : errcode=%v , errormsg=%v", resAccessToken.ErrCode, resAccessToken.ErrMsg)
-		return
-	}
-	return
+	return resAccessToken, &resAccessToken
 }
