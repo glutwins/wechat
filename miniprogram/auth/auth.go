@@ -58,7 +58,7 @@ func (auth *Auth) Code2SessionContext(ctx context2.Context, jsCode string) (resu
 	if err = json.Unmarshal(response, &result); err != nil {
 		return
 	}
-	return result, &result
+	return result, result.Err()
 }
 
 // GetPaidUnionID 用户支付完成后，获取该用户的 UnionId，无需用户授权
