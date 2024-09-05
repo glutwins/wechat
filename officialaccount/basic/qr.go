@@ -62,12 +62,7 @@ func (basic *Basic) GetQRTicket(tq *Request) (t *Ticket, err error) {
 		return
 	}
 
-	if t.ErrMsg != "" {
-		err = fmt.Errorf("get qr_ticket error : errcode=%v , errormsg=%v", t.ErrCode, t.ErrMsg)
-		return
-	}
-
-	return
+	return t, t
 }
 
 // ShowQRCode 通过ticket换取二维码

@@ -163,11 +163,7 @@ func (ak *StableAccessToken) GetAccessTokenDirectly(ctx context.Context, forceRe
 		return
 	}
 
-	if resAccessToken.ErrCode != 0 {
-		err = fmt.Errorf("get stable access_token error : errcode=%v , errormsg=%v", resAccessToken.ErrCode, resAccessToken.ErrMsg)
-		return
-	}
-	return
+	return resAccessToken, resAccessToken.Err()
 }
 
 // WorkAccessToken 企业微信AccessToken 获取
