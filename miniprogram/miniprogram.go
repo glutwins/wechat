@@ -33,11 +33,10 @@ type MiniProgram struct {
 }
 
 // NewMiniProgram 实例化小程序 API
-func NewMiniProgram(cfg *config.Config) *MiniProgram {
-	defaultAkHandle := credential.NewDefaultAccessToken(cfg.AppID, cfg.AppSecret, credential.CacheKeyMiniProgramPrefix, cfg.Cache)
+func NewMiniProgram(cfg *config.Config, akHandle credential.AccessTokenHandle) *MiniProgram {
 	ctx := &context.Context{
 		Config:            cfg,
-		AccessTokenHandle: defaultAkHandle,
+		AccessTokenHandle: akHandle,
 	}
 	return &MiniProgram{ctx}
 }

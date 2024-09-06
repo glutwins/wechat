@@ -47,10 +47,7 @@ func (miniProgram *MiniProgram) SetAuthorizerRefreshToken(authorizerRefreshToken
 func NewMiniProgram(opCtx *openContext.Context, appID string) *MiniProgram {
 	miniProgram := miniprogram.NewMiniProgram(&miniConfig.Config{
 		AppID: opCtx.AppID,
-		Cache: opCtx.Cache,
-	})
-	// 设置获取access_token的函数
-	miniProgram.SetAccessTokenHandle(NewDefaultAuthrAccessToken(opCtx, appID))
+	}, NewDefaultAuthrAccessToken(opCtx, appID))
 	return &MiniProgram{AppID: appID, MiniProgram: miniProgram, openContext: opCtx}
 }
 

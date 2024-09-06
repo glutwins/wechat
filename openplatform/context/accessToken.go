@@ -142,6 +142,12 @@ type ID struct {
 	ID int `json:"id"`
 }
 
+type FuncscopeCategory struct {
+	ID   int    `json:"id"`
+	Name string `json:"name"`
+	Type int    `json:"type"`
+}
+
 // AuthBaseInfo 授权的基本信息
 type AuthBaseInfo struct {
 	AuthrAccessToken
@@ -150,7 +156,7 @@ type AuthBaseInfo struct {
 
 // AuthFuncInfo 授权的接口内容
 type AuthFuncInfo struct {
-	FuncscopeCategory ID `json:"funcscope_category"`
+	FuncscopeCategory FuncscopeCategory `json:"funcscope_category"`
 }
 
 // AuthrAccessToken 授权方AccessToken
