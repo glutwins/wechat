@@ -7,8 +7,6 @@ import (
 	log "github.com/sirupsen/logrus"
 
 	"github.com/silenceper/wechat/v2/cache"
-	"github.com/silenceper/wechat/v2/miniprogram"
-	miniConfig "github.com/silenceper/wechat/v2/miniprogram/config"
 	"github.com/silenceper/wechat/v2/officialaccount"
 	offConfig "github.com/silenceper/wechat/v2/officialaccount/config"
 	"github.com/silenceper/wechat/v2/openplatform"
@@ -53,14 +51,6 @@ func (wc *Wechat) GetOfficialAccount(cfg *offConfig.Config) *officialaccount.Off
 		cfg.Cache = wc.cache
 	}
 	return officialaccount.NewOfficialAccount(cfg)
-}
-
-// GetMiniProgram 获取小程序的实例
-func (wc *Wechat) GetMiniProgram(cfg *miniConfig.Config) *miniprogram.MiniProgram {
-	if cfg.Cache == nil {
-		cfg.Cache = wc.cache
-	}
-	return miniprogram.NewMiniProgram(cfg)
 }
 
 // GetPay 获取微信支付的实例
