@@ -19,6 +19,7 @@ import (
 	"github.com/silenceper/wechat/v2/miniprogram/riskcontrol"
 	"github.com/silenceper/wechat/v2/miniprogram/security"
 	"github.com/silenceper/wechat/v2/miniprogram/shortlink"
+	"github.com/silenceper/wechat/v2/miniprogram/store"
 	"github.com/silenceper/wechat/v2/miniprogram/subscribe"
 	"github.com/silenceper/wechat/v2/miniprogram/tcb"
 	"github.com/silenceper/wechat/v2/miniprogram/urllink"
@@ -164,4 +165,8 @@ func (miniProgram *MiniProgram) GetRedPacketCover() *redpacketcover.RedPacketCov
 // GetUpdatableMessage 小程序动态消息
 func (miniProgram *MiniProgram) GetUpdatableMessage() *message.UpdatableMessage {
 	return message.NewUpdatableMessage(miniProgram.ctx)
+}
+
+func (miniProgram *MiniProgram) GetStore() *store.Store {
+	return store.NewStore(miniProgram.ctx)
 }

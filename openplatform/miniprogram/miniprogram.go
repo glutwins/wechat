@@ -3,7 +3,6 @@ package miniprogram
 import (
 	"fmt"
 
-	"github.com/silenceper/wechat/v2/credential"
 	"github.com/silenceper/wechat/v2/miniprogram"
 	miniConfig "github.com/silenceper/wechat/v2/miniprogram/config"
 	miniContext "github.com/silenceper/wechat/v2/miniprogram/context"
@@ -47,8 +46,10 @@ func (miniProgram *MiniProgram) SetAuthorizerRefreshToken(authorizerRefreshToken
 func NewMiniProgram(opCtx *openContext.Context, appID string) *MiniProgram {
 	miniProgram := miniprogram.NewMiniProgram(&miniConfig.Config{
 		AppID: opCtx.AppID,
-	}, NewDefaultAuthrAccessToken(opCtx, appID))
-	return &MiniProgram{AppID: appID, MiniProgram: miniProgram, openContext: opCtx}
+	}, nil)
+	mp := &MiniProgram{AppID: appID, MiniProgram: miniProgram, openContext: opCtx}
+	miniProgram.SetAccessTokenHandle(mp)
+	return mp
 }
 
 // GetComponent get component
@@ -67,23 +68,4 @@ func (miniProgram *MiniProgram) GetURLLink() *urllink.URLLink {
 	return urllink.NewURLLink(&miniContext.Context{
 		AccessTokenHandle: miniProgram,
 	})
-}
-
-// DefaultAuthrAccessToken 默认获取授权ak的方法
-type DefaultAuthrAccessToken struct {
-	opCtx *openContext.Context
-	appID string
-}
-
-// NewDefaultAuthrAccessToken 设置access_token
-func NewDefaultAuthrAccessToken(opCtx *openContext.Context, appID string) credential.AccessTokenHandle {
-	return &DefaultAuthrAccessToken{
-		opCtx: opCtx,
-		appID: appID,
-	}
-}
-
-// GetAccessToken 获取ak
-func (ak *DefaultAuthrAccessToken) GetAccessToken() (string, error) {
-	return ak.opCtx.GetAuthrAccessToken(ak.appID)
 }
