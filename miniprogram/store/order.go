@@ -171,6 +171,7 @@ type Order struct {
 	OrderDetail     OrderDetail     `json:"order_detail"`
 	AftersaleDetail AftersaleDetail `json:"aftersale_detail"`
 	Openid          string          `json:"openid"`
+	UnionId         string          `json:"unionid"`
 }
 
 func (s *Store) EcOrderGet(c context.Context, orderId string) (*EcOrderGetResp, error) {
