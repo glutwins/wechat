@@ -83,11 +83,21 @@ type PayInfo struct {
 	PaymentMethod int    `json:"payment_method"`
 }
 type PriceInfo struct {
-	ProductPrice    int  `json:"product_price"`
-	OrderPrice      int  `json:"order_price"`
-	Freight         int  `json:"freight"`
-	DiscountedPrice int  `json:"discounted_price"`
-	IsDiscounted    bool `json:"is_discounted"`
+	ProductPrice            int  `json:"product_price,omitempty"`
+	OrderPrice              int  `json:"order_price,omitempty"`
+	Freight                 int  `json:"freight,omitempty"`
+	DiscountedPrice         int  `json:"discounted_price,omitempty"`
+	IsDiscounted            bool `json:"is_discounted,omitempty"`
+	OriginalOrderPrice      int  `json:"original_order_price,omitempty"`
+	EstimateProductPrice    int  `json:"estimate_product_price,omitempty"`
+	ChangeDownPrice         int  `json:"change_down_price,omitempty"`
+	ChangeFreight           int  `json:"change_freight,omitempty"`
+	IsChangeFreight         bool `json:"is_change_freight,omitempty"`
+	UseDeduction            bool `json:"use_deduction,omitempty"`
+	DeductionPrice          int  `json:"deduction_price,omitempty"`
+	MerchantReceievePrice   int  `json:"merchant_receieve_price,omitempty"`
+	MerchantDiscountedPrice int  `json:"merchant_discounted_price,omitempty"`
+	FinderDiscountedPrice   int  `json:"finder_discounted_price,omitempty"`
 }
 type AddressInfo struct {
 	UserName     string `json:"user_name"`
@@ -134,8 +144,11 @@ type SharerInfo struct {
 	HandlingProgress int    `json:"handling_progress"`
 }
 type SettleInfo struct {
-	CommissionFee        int `json:"commission_fee"`
-	PredictCommissionFee int `json:"predict_commission_fee"`
+	CommissionFee           int   `json:"commission_fee"`
+	PredictCommissionFee    int   `json:"predict_commission_fee"`
+	PredictWecoinCommission int   `json:"predict_wecoin_commission"`
+	WecoinCommission        int   `json:"wecoin_commission"`
+	SettleTime              int64 `json:"settle_time"`
 }
 type SkuSharerInfos struct {
 	SharerOpenid  string `json:"sharer_openid"`
@@ -144,16 +157,31 @@ type SkuSharerInfos struct {
 	ShareScene    int    `json:"share_scene"`
 	SkuID         string `json:"sku_id"`
 }
+type CommissionInfo struct {
+	SkuID        string `json:"sku_id"`
+	NickName     string `json:"nickname"`
+	Type         int    `json:"type"`
+	Status       int    `json:"status"`
+	Amount       int    `json:"amount"`
+	FinderId     string `json:"finderid"`
+	OpenFinderId string `json:"openfinderid"`
+}
+type AgentInfo struct {
+	AgentFinderId       string `json:"agent_finder_id"`
+	AgentFinderNickname string `json:"agent_finder_nickname"`
+}
 type OrderDetail struct {
-	ProductInfos   []ProductInfos   `json:"product_infos"`
-	PayInfo        PayInfo          `json:"pay_info"`
-	PriceInfo      PriceInfo        `json:"price_info"`
-	DeliveryInfo   DeliveryInfo     `json:"delivery_info"`
-	CouponInfo     CouponInfo       `json:"coupon_info"`
-	ExtInfo        ExtInfo          `json:"ext_info"`
-	SharerInfo     SharerInfo       `json:"sharer_info"`
-	SettleInfo     SettleInfo       `json:"settle_info"`
-	SkuSharerInfos []SkuSharerInfos `json:"sku_sharer_infos"`
+	ProductInfos    []ProductInfos   `json:"product_infos"`
+	PayInfo         PayInfo          `json:"pay_info"`
+	PriceInfo       PriceInfo        `json:"price_info"`
+	DeliveryInfo    DeliveryInfo     `json:"delivery_info"`
+	CouponInfo      CouponInfo       `json:"coupon_info"`
+	ExtInfo         ExtInfo          `json:"ext_info"`
+	CommissionInfos []CommissionInfo `json:"commission_infos"`
+	SharerInfo      SharerInfo       `json:"sharer_info"`
+	SettleInfo      SettleInfo       `json:"settle_info"`
+	SkuSharerInfos  []SkuSharerInfos `json:"sku_sharer_infos"`
+	AgentInfo       AgentInfo        `json:"agent_info"`
 }
 type AftersaleOrderList struct {
 	AftersaleOrderID string `json:"aftersale_order_id"`
