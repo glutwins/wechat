@@ -14,7 +14,8 @@ const (
 
 	checkEncryptedDataURL = "https://api.weixin.qq.com/wxa/business/checkencryptedmsg?access_token=%s"
 
-	getPhoneNumber = "https://api.weixin.qq.com/wxa/business/getuserphonenumber?access_token=%s"
+	getPhoneNumber  = "https://api.weixin.qq.com/wxa/business/getuserphonenumber?access_token=%s"
+	getPluginOpenId = "https://api.weixin.qq.com/wxa/getpluginopenpid?access_token=%s"
 )
 
 // Auth 登录/用户信息
@@ -141,4 +142,39 @@ func (auth *Auth) GetPhoneNumberContext(ctx context2.Context, code string) (*Get
 // GetPhoneNumber 小程序通过code获取用户手机号
 func (auth *Auth) GetPhoneNumber(code string) (*GetPhoneNumberResponse, error) {
 	return auth.GetPhoneNumberContext(context2.Background(), code)
+}
+
+type GetPluginOpenpidResponse struct {
+	util.CommonError
+	Openpid string `json:"openpid"`
+}
+
+// GetPhoneNumberContext 小程序通过code获取用户手机号
+func (auth *Auth) GetPluginOpenpidContext(ctx context2.Context, code string) (*GetPluginOpenpidResponse, error) {
+	var response []byte
+	at, err := auth.GetAccessToken()
+	if err != nil {
+		return nil, err
+	}
+
+	bodyBytes, err := json.Marshal(map[string]interface{}{
+		"code": code,
+	})
+	if err != nil {
+		return nil, err
+	}
+
+	header := map[string]string{"Content-Type": "application/json;charset=utf-8"}
+	if response, err = util.HTTPPostContext(ctx, fmt.Sprintf(getPluginOpenId, at), bodyBytes, header); err != nil {
+		return nil, err
+	}
+
+	var result GetPluginOpenpidResponse
+	err = util.DecodeWithError(response, &result, "plugin.GetPluginOpenpidContext")
+	return &result, err
+}
+
+// GetPhoneNumber 小程序通过code获取用户手机号
+func (auth *Auth) GetPluginOpenpid(code string) (*GetPluginOpenpidResponse, error) {
+	return auth.GetPluginOpenpidContext(context2.Background(), code)
 }
